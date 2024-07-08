@@ -2,13 +2,14 @@ import svgwrite
 import pygame, sys
 import math
 import os
+import random
 from datetime import datetime
 
 planets = {}
 count = 0
 
 pygame.init()
-screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
+screen = pygame.display.set_mode((1000, 1000))
 pygame.display.set_caption("Orbit Visualizer")
 
 width = screen.get_width()
@@ -35,8 +36,8 @@ def lines_to_svg(lines, output_file):
         
     # Iterate over the list of lines and add them to the SVG
     for line in lines:
-        start, end = line
-        dwg.add(dwg.line(start=start, end=end, stroke=svgwrite.rgb(100, 100, 100, '%'), stroke_width=2))  # White line
+        start, end, (r,g,b) = line
+        dwg.add(dwg.line(start=start, end=end, stroke=svgwrite.rgb(r, g, b), stroke_width=2))
 
     # Save the drawing to the file
     dwg.save()
@@ -79,12 +80,13 @@ def render():
             if counter%6 == 0:
                 lines.append(
                     (from_centre(planets[f"{k}"]["x"], planets[f"{k}"]["y"]),
-                     from_centre(planets[f"{k+1}"]["x"], planets[f"{k+1}"]["y"]))
+                     from_centre(planets[f"{k+1}"]["x"], planets[f"{k+1}"]["y"]),
+                     (random.randint(0, 255),random.randint(0, 255),random.randint(0, 255)))
                 )
         for j in lines:
             pygame.draw.line(
                 screen,
-                (255,255,255),
+                j[2],
                 j[0],j[1]
             )
 
